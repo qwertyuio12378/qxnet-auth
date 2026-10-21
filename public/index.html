@@ -11,7 +11,7 @@
   // Supabase 配置
   const SUPABASE_URL = 'https://gngcducutevgllbaejec.supabase.co';
   const SUPABASE_ANON_KEY = 'sb_publishable_i5npxDKfL83UBEDBBPm57A_WqqYeh-P';
-  const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 </script>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -850,7 +850,7 @@
       if (!acc) return showToast('请输入账号');
       if (!pwd) return showToast('请输入密码');
       showToast('登录中…');
-      const { data, error } = await supabase.auth.signInWithPassword({
+      const { data, error } = await sb.auth.signInWithPassword({
         email: acc,
         password: pwd,
       });
@@ -873,7 +873,7 @@
         return showToast('卡密无效');
       }
       showToast('注册中…');
-      const { data, error } = await supabase.auth.signUp({
+      const { data, error } = await sb.auth.signUp({
         email: acc,
         password: pwd,
         options: {
@@ -884,7 +884,7 @@
         showToast(error.message);
       } else {
         // 标记卡密为已使用
-        await supabase.from('cards').update({ used: true }).eq('card_key', card);
+        await sb.from('cards').update({ used: true }).eq('card_key', card);
         showToast('注册成功');
       }
     } else {
