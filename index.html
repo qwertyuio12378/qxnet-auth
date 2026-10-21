@@ -867,23 +867,17 @@
       if (!acc) return showToast('请输入账号');
       if (pwd.length < 8) return showToast('密码需 8 位及以上');
       if (!card) return showToast('请输入卡密 / 授权码');
-      showToast('验证卡密…');
-      // 先验证卡密
-      const { data: cardData, error: cardErr } = await supabase
-        .from('cards')
-        .select('*')
-        .eq('card_key', card)
-        .eq('used', false)
-        .single();
-      if (cardErr || !cardData) {
-        return showToast('卡密无效或已使用');
+      // 测试卡密列表（先写死，后面接数据库）
+      const validCards = ['QXNET-001', 'QXNET-002', 'QXNET-003', 'QXNET-MONTH-001', 'QXNET-QUARTER-001', 'QXNET-LIFETIME-001'];
+      if (!validCards.includes(card)) {
+        return showToast('卡密无效');
       }
       showToast('注册中…');
       const { data, error } = await supabase.auth.signUp({
         email: acc,
         password: pwd,
         options: {
-          data: { card_key: card, card_type: cardData.type }
+          data: { card_key: card }
         }
       });
       if (error) {
